@@ -11,7 +11,7 @@ async function encrypt(password) {
         
             return hash;
         }else{
-            return {status: false}
+            return {status: false, message: "Erro ao salvar senha"}
         }
     } catch (error) {
         console.log("Erro inesperadO: "+error);

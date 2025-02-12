@@ -7,12 +7,12 @@ class UserController {
     async create(req,res){
         try{
             let {email, password, firstName, lastName, cpf} = req.body
-            const user = await userService.create(email, password, firstName, lastName, cpf);
+            const result = await userService.create(email, password, firstName, lastName, cpf);
 
-            if(user.status){
-                return res.status(200).json({status: user.status, message: user.message, user: user.user})
+            if(result.status){
+                return res.status(200).json({status: result.status, message: result.message, user: result.user})
             }else{
-                return res.status(400).json({status: user.status, message: user.message})
+                return res.status(400).json({status: result.status, message: result.message})
             }
         }catch(error){
             console.log("Erro inesperado: "+error);
@@ -73,32 +73,8 @@ class UserController {
         try {
             const {email, newPassword, actualPassword, firstName, lastName, cpf} = req.body
             let id = req.params.id;
-            let updatePassword;
-
-            const verifyPassword = await userService.findById(id);
             
-            if(newPassword){
-                if (!actualPassword) {
-                    return res.status(400).json({ message: "Caso queira alterar para uma nova senha, é obrigatório digitar a senha atual." });
-                  }
-                  
-                const isValidPassword = await bcrypt.compare(actualPassword, verifyPassword.user.password);
-                
-                console.log("ISVALIDPASS "+isValidPassword);
-                
-               if(isValidPassword){
-                    updatePassword = await encrypt(newPassword);
-                    console.log(updatePassword);  
-               }else{
-                    return res.status(400).json({message:"Senha atual incorreta"});
-               }
-
-            }else{
-                updatePassword = undefined;
-            }
-
-
-            const user = await userService.update(id, email, updatePassword, firstName, lastName, cpf);
+            const user = await userService.update(id, email, newPassword, actualPassword, firstName, lastName, cpf);
             
             if(user.status){
                 return res.status(200).json({status: user.status, message: user.message, user: user.user});

@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const encrypt = require("../utils/encryptPassword");
+const bcrypt = require('bcrypt');
 
 class UserService{
     async create(email, password, firstName, lastName, cpf){
@@ -71,33 +72,60 @@ class UserService{
     }
 
 
-    async update(id, email, password, firstName, lastName, cpf){
+    async update(id, email, newPassword, actualPassword, firstName, lastName, cpf){
         try {
             let updateUser = [];
+            let password;
+            const userExists = await this.findById(id);
 
-            if(email){
-                const emailExists = await this.findByEmail(email);
+            if(userExists.status){
+                if(email){
+                    const emailExists = await this.findByEmail(email);
 
-                if(emailExists.status){
-                    return{status:false, message: "Já existe um usuario com esse endereço de email"}
+                    if(emailExists.status){
+                        return{status:false, message: "Já existe um usuario com esse endereço de email"}
+                    }
+
+                    updateUser.email = email;
                 }
 
-                updateUser.email = email;
-            }
-            if(password)updateUser.password = password;
-            if(firstName)updateUser.firstName = firstName;
-            if(lastName)updateUser.lastName = lastName;
-            if(cpf)updateUser.cpf = cpf;
-            
-            const user = await User.update(updateUser, {where:{id: id}});
-            console.log(user);
+                if(newPassword){
+                    if (!actualPassword) {
+                        return({status: false, message: "Caso queira alterar para uma nova senha, é obrigatório digitar a senha atual." });
+                    }
+                    
+                    const isValidPassword = await bcrypt.compare(actualPassword, userExists.user.password);
+                    
+                    console.log("ISVALIDPASS "+isValidPassword);
+                        
+                    if(isValidPassword){
+                            password = await encrypt(newPassword);
+                            updateUser.password = password;
+                    }else{
+                            return res.status(400).json({message:"Senha atual incorreta"});
+                    }
+    
+                    }else{
+                        password = undefined;
+                        updateUser.password = password;
+                    }
 
-            if(user == 0){
-                return{status:false, message: "Usuário não encontrado"}
+                if(firstName)updateUser.firstName = firstName;
+                if(lastName)updateUser.lastName = lastName;
+                if(cpf)updateUser.cpf = cpf;
+                
+                const user = await User.update(updateUser, {where:{id: id}});
+ 
+
+                if(user == 0){
+                    return{status:false, message: "Erro ao atualizar usuário, verifique os campos e tente novamente"}
+                }else{
+                    return{status:true, message: `Usuário com id ${id} atualizado com sucesso`}
+                }
             }else{
-                return{status:true, message: `Usuário com id ${id} atualizado com sucesso`}
+                return{status:false, message: "Usuário não encontrado"}
             }
-            
+
         } catch (error) {
             console.log(error);
             return{status: false, message: "Erro inesperado ao atualizar usuário"}
