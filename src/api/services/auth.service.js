@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const userService = require("./user.service");
 const genToken = require('../utils/genToken');
-const {compare}  = require("../utils/encryptPassword");
+const {compare}  = require("../utils/encryption");
 
 
 class AuthService{
@@ -29,6 +29,8 @@ class AuthService{
             return{status: false, message: "Erro inesperado ao fazer login"}
         }
     }
+
+    //TODO REGISTER
 }
 
 module.exports = new AuthService()

@@ -1,5 +1,5 @@
 const User = require("../models/User");
-const {encrypt} = require("../utils/encryptPassword");
+const {encrypt} = require("../utils/encryption");
 const bcrypt = require('bcrypt');
 
 class UserService{
