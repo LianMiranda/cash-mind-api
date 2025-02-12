@@ -1,12 +1,11 @@
 const userService = require("../services/user.service")
 const express = require('express');
-const encrypt = require("../utils/encryptPassword");
-const bcrypt = require('bcrypt');
+
 
 class UserController {
     async create(req,res){
         try{
-            let {email, password, firstName, lastName, cpf} = req.body
+            let {email, password, firstName, lastName, cpf} = req.body;
             const result = await userService.create(email, password, firstName, lastName, cpf);
 
             if(result.status){

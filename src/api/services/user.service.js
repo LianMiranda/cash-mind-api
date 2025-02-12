@@ -74,7 +74,7 @@ class UserService{
 
     async update(id, email, newPassword, actualPassword, firstName, lastName, cpf){
         try {
-            let updateUser = [];
+            let updateUser = {};
             let password;
             const userExists = await this.findById(id);
 
@@ -95,20 +95,14 @@ class UserService{
                     }
                     
                     const isValidPassword = await bcrypt.compare(actualPassword, userExists.user.password);
-                    
-                    console.log("ISVALIDPASS "+isValidPassword);
-                        
+                                            
                     if(isValidPassword){
                             password = await encrypt(newPassword);
                             updateUser.password = password;
                     }else{
-                            return res.status(400).json({message:"Senha atual incorreta"});
+                            return({status: false, message:"Senha atual incorreta"});
                     }
-    
-                    }else{
-                        password = undefined;
-                        updateUser.password = password;
-                    }
+                }
 
                 if(firstName)updateUser.firstName = firstName;
                 if(lastName)updateUser.lastName = lastName;
@@ -116,7 +110,6 @@ class UserService{
                 
                 const user = await User.update(updateUser, {where:{id: id}});
  
-
                 if(user == 0){
                     return{status:false, message: "Erro ao atualizar usuário, verifique os campos e tente novamente"}
                 }else{
