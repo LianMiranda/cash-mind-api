@@ -1,5 +1,5 @@
 const User = require("../models/User");
-const encrypt = require("../utils/encryptPassword");
+const {encrypt} = require("../utils/encryptPassword");
 const bcrypt = require('bcrypt');
 
 class UserService{
@@ -8,9 +8,10 @@ class UserService{
             if(!email || !password || !firstName || !lastName || !cpf){
                 return{status:false, message: "Verifique se todos os campos foram preenchidos"}
             }
-            const verifyEmail = this.findByEmail(email);
+            const verifyEmail = await this.findByEmail(email);
+            
 
-            if(verifyEmail){
+            if(verifyEmail.status){
                 return{status:false, message: "Já existe um usuario com esse endereço de email"}
             }
             const hash = await encrypt(password)

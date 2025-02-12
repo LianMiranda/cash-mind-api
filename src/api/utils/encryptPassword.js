@@ -1,13 +1,12 @@
 const bcrypt = require('bcrypt');
-const userService = require('../services/user.service');
+const env= require('../../config/EnvConfig/env.config');
 
 
 async function encrypt(password) {
     try {
         if(password){
-            const saltRounds = 10;
-            const salt = bcrypt.genSaltSync(saltRounds);
-            const hash = bcrypt.hashSync(password, salt);
+            const salt =  bcrypt.genSaltSync(env.salt);
+            const hash =  bcrypt.hashSync(password, salt);
         
             return hash;
         }else{
@@ -19,4 +18,18 @@ async function encrypt(password) {
     }
 }
 
-module.exports = encrypt;
+async function compare(password, userPassword) {
+    try {
+        if(password){            
+            const comparePass = bcrypt.compare(password, userPassword);
+            return comparePass;
+        }else{
+            return {status: false, message: "Erro ao salvar senha"}
+        }
+    } catch (error) {
+        console.log("Erro inesperadO: "+error);
+        throw new Error(error)
+    }
+}
+
+module.exports = {encrypt, compare};

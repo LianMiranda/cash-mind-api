@@ -11,4 +11,7 @@ module.exports = {
     password: process.env.DB_PASSWORD,
     name: process.env.DATABASE,
   },
+  encrypt:{
+    salt: process.env.SALT_ROUNDS
+  }
 };
