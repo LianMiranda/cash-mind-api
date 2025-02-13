@@ -1,7 +1,6 @@
 const userService = require("../services/user.service")
 const express = require('express');
 
-
 class UserController {
     async create(req,res){
         try{
@@ -9,13 +8,13 @@ class UserController {
             const result = await userService.create(email, password, firstName, lastName, cpf);
 
             if(result.status){
-                return res.status(200).json({status: result.status, message: result.message, user: result.user})
-            }else{
-                return res.status(400).json({status: result.status, message: result.message})
+                return res.status(201).json(result);
             }
+
         }catch(error){
-            console.log("Erro inesperado: "+error);
-            return res.status(500).json({error: "Erro interno no servidor"})
+            const statusCode = error.statusCode;
+            console.log("ERRO: "+error.message);
+            return res.status(statusCode).json({status: false, error: error.message})
         } 
     }
 

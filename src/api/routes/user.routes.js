@@ -11,5 +11,6 @@ router.put("/user/update/:id", userController.update);
 router.delete("/user/delete/:id", userController.delete);
 
 router.post("/auth/login", authController.login);
+//TODO router.post("/auth/register", authController.register);
 
 module.exports = router;

@@ -1,32 +1,35 @@
 const User = require("../models/User");
+const { AppError } = require("../utils/customErrors");
 const {encrypt} = require("../utils/encryption");
 const bcrypt = require('bcrypt');
 
 class UserService{
     async create(email, password, firstName, lastName, cpf){
-        try {
-            if(!email || !password || !firstName || !lastName || !cpf){
-                return{status:false, message: "Verifique se todos os campos foram preenchidos"}
-            }
-            const verifyEmail = await this.findByEmail(email);
-            
 
-            if(verifyEmail.status){
-                return{status:false, message: "Já existe um usuario com esse endereço de email"}
-            }
-            const hash = await encrypt(password)
+        if(!email || !password || !firstName || !lastName || !cpf){
+            throw new AppError("Verifique se todos os campos foram preenchidos", 400);
+        }
+        
+        const verifyEmail = await this.findByEmail(email);
+        
+        if(verifyEmail.status){
+            throw new AppError("Já existe um usuário cadastrado com esse endereço de email", 409);
+        }
+
+        try {
+           const hash = await encrypt(password);
 
             const user = await User.create({email, password: hash, firstName, lastName, cpf});
 
-            return{status: true, message: "Usuário cadastrado com sucesso", user: user.email}
+            return{status: true, message: "Usuário cadastrado com sucesso", user}
 
         } catch (error) {
             console.log(error);
-            return{status: false, message: "Erro inesperado ao cadastrar usuario"}
-        }
-        
+            throw new AppError("Erro inesperado ao cadastrar usuário", 500);
+        }       
     }
 
+    //TODO Mudar a forma como o erro é tratado nas outras funções
     async find(){
         try {
             const user = await User.findAll();
@@ -139,6 +142,28 @@ class UserService{
                 }else{
                     return{status: true, message: `Usuário com id ${id} deletado com sucesso`}
                 }
+            }else{
+                return{status: false, message: `Usuário não encontrado`}
+            }
+        } catch (error) {
+            console.log(error);
+            return{status: false, message: "Erro inesperado ao deletar usuário"}
+        }
+    }
+
+    async deleteByEmail(email){
+        try {
+            const userExists = await this.findByEmail(email);
+
+            if(userExists.status){
+                const deleteUser =  await User.destroy({where:{email: email}});
+                
+                if(deleteUser == 0){
+                    return{status: false, message: "Erro ao deletar usuário"}
+                }
+
+                return{status: true, message: `Usuário com email ${email} deletado com sucesso`}
+                
             }else{
                 return{status: false, message: `Usuário não encontrado`}
             }

@@ -7,7 +7,6 @@ async function encrypt(password) {
         if(password){
             const salt =  bcrypt.genSaltSync(env.salt);
             const hash =  bcrypt.hashSync(password, salt);
-        
             return hash;
         }else{
             return {status: false, message: "Erro ao salvar senha"}
