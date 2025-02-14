@@ -1,6 +1,7 @@
 const supertest = require('supertest');
 const app = require('../src/app');
-const request = supertest(app)
+const request = supertest(app);
+const sequelize = require('../src/config/database/connection'); 
 
 const userTest = {
     email:"teste@gmail.com", 
@@ -12,32 +13,49 @@ const userTest = {
 
 const userTestAuth = {
     email:"testeAuth@gmail.com", 
-    firstName:"Teste", 
+    firstName:"Teste Auth", 
     lastName:"da Silva", 
-    cpf:"00000000000",
-    password: "1234"
+    cpf:"00000000001",
+    password: "12345"
 }
 
-
 beforeAll(async () =>{
-    await request.post("/api/user").send(userTestAuth);
+    try {  
+        await sequelize.authenticate();
+    } catch (error) {
+        console.error("Erro ao conectar banco dados de teste:", error);
+    }
+})
+
+beforeEach(async () => {
+    try {
+        await request.post("/api/user").send(userTestAuth);
+    } catch (error) {
+        console.error("Erro ao criar usuario userTestAuth: "+error);
+        
+    }
 })
 
 afterAll(async () => {
+    try {  
+        await sequelize.close();
+    } catch (error) {
+        console.error("Erro ao fechar banco", error);
+    }
+});
+
+afterEach(async () => {
     try {
-        const sequelize = require('../src/config/database/connection'); 
-        
         const getUser = await request.get(`/api/user/email/${userTestAuth.email}`);
+
         if (getUser._body?.result?.id) {
             await request.delete(`/api/user/delete/${getUser._body.result.id}`);
         }
-
     } catch (error) {
-        console.error("Erro ao limpar dados de teste:", error);
-    } finally {
-        await sequelize.close();
+        console.error("Erro ao deletar usuario userTestAuth: "+error);
     }
-});
+   
+})
 
 
 describe("User tests", () => {
@@ -93,7 +111,7 @@ describe("AUTH", () =>{
     })
 
     it("Deve impedir que o usuario faça login com senha incorreta", async () =>{
-        const res = await request.post("/api/auth/login").send({email: userTestAuth.email, password: "000000"})
+        const res = await request.post("/api/auth/login").send({email: userTestAuth.email, password: "000004320"})
         
         expect(res._body.message).toEqual("Credênciais inválidas, verifique se os campos foram preenchidos corretamente")
         expect(res.statusCode).toEqual(400);

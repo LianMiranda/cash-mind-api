@@ -2,6 +2,7 @@ const User = require("../models/User");
 const { AppError } = require("../utils/customErrors");
 const {encrypt} = require("../utils/encryption");
 const bcrypt = require('bcrypt');
+const {v4} = require('uuid');
 
 class UserService{
     async create(email, password, firstName, lastName, cpf){
@@ -17,9 +18,9 @@ class UserService{
         }
 
         try {
-           const hash = await encrypt(password);
-
-            const user = await User.create({email, password: hash, firstName, lastName, cpf});
+            const hash = await encrypt(password);
+            const id = v4()
+            const user = await User.create({id, email, password: hash, firstName, lastName, cpf});
 
             return{status: true, message: "Usuário cadastrado com sucesso", user, statusCode: 201}
 
