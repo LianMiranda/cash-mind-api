@@ -7,13 +7,13 @@ class UserService{
     async create(email, password, firstName, lastName, cpf){
 
         if(!email || !password || !firstName || !lastName || !cpf){
-            throw new AppError("Verifique se todos os campos foram preenchidos", 400);
+            return{status:false, message: "Verifique se todos os campos foram preenchidos", statusCode: 400}
         }
         
         const verifyEmail = await this.findByEmail(email);
         
         if(verifyEmail.status){
-            throw new AppError("Já existe um usuário cadastrado com esse endereço de email", 409);
+            return{status:false, message: "Já existe um usuario com esse endereço de email",  statusCode: 409}
         }
 
         try {
@@ -21,7 +21,7 @@ class UserService{
 
             const user = await User.create({email, password: hash, firstName, lastName, cpf});
 
-            return{status: true, message: "Usuário cadastrado com sucesso", user}
+            return{status: true, message: "Usuário cadastrado com sucesso", user, statusCode: 201}
 
         } catch (error) {
             console.log(error);
@@ -35,13 +35,13 @@ class UserService{
             const user = await User.findAll();
 
             if(user.length === 0){
-                return{status: false, message: "Nenhum usuario encontrado"}
+                return{status: false, message: "Nenhum usuario encontrado", statusCode: 404}
             }else{
-                return{status: true, message: "Usuários encontrados", user}
+                return{status: true, message: "Usuários encontrados", user, statusCode: 200}
             }
         } catch (error) {
             console.log(error);
-            return{status: false, message: "Erro inesperado ao buscar usuarios"}
+            return{status: false, message: "Erro inesperado ao buscar usuarios", statusCode: 500}
         }
     }
     
@@ -50,13 +50,13 @@ class UserService{
             const user = await User.findOne({where: {id: id}});
             
             if(user){
-                return{status: true, user}
+                return{status: true, user, statusCode: 200}
             }else{
-                return{status: false, message: "Nenhum usuario encontrado"}
+                return{status: false, message: "Nenhum usuario encontrado",  statusCode: 404}
             }
         } catch (error) {
             console.log(error);
-            return{status: false, message: "Erro inesperado ao buscar usuarios"}
+            return{status: false, message: "Erro inesperado ao buscar usuarios",  statusCode: 500}
         }
     }
 
@@ -65,13 +65,13 @@ class UserService{
             const user = await User.findOne({where: {email: email}});
 
             if(user){
-                return{status: true, user}
+                return{status: true, user, statusCode: 200}
             }else{
-                return{status: false, message: "Nenhum usuario encontrado"}
+                return{status: false, message: "Nenhum usuario encontrado",  statusCode: 404}
             }
         } catch (error) {
             console.log(error);
-            return{status: false, message: "Erro inesperado ao buscar usuarios"}
+            return{status: false, message: "Erro inesperado ao buscar usuarios",  statusCode: 500}
         }
     }
 
@@ -87,7 +87,7 @@ class UserService{
                     const emailExists = await this.findByEmail(email);
 
                     if(emailExists.status){
-                        return{status:false, message: "Já existe um usuario com esse endereço de email"}
+                        return{status:false, message: "Já existe um usuario com esse endereço de email",  statusCode: 409}
                     }
 
                     updateUser.email = email;
@@ -95,7 +95,7 @@ class UserService{
 
                 if(newPassword){
                     if (!actualPassword) {
-                        return({status: false, message: "Caso queira alterar para uma nova senha, é obrigatório digitar a senha atual." });
+                        return({status: false, message: "Caso queira alterar para uma nova senha, é obrigatório digitar a senha atual.", statusCode: 400 });
                     }
                     
                     const isValidPassword = await bcrypt.compare(actualPassword, userExists.user.password);
@@ -104,7 +104,7 @@ class UserService{
                             password = await encrypt(newPassword);
                             updateUser.password = password;
                     }else{
-                            return({status: false, message:"Senha atual incorreta"});
+                            return({status: false, message:"Senha atual incorreta", statusCode: 400});
                     }
                 }
 
@@ -115,17 +115,17 @@ class UserService{
                 const user = await User.update(updateUser, {where:{id: id}});
  
                 if(user == 0){
-                    return{status:false, message: "Erro ao atualizar usuário, verifique os campos e tente novamente"}
+                    return{status:false, message: "Erro ao atualizar usuário, verifique os campos e tente novamente", statusCode: 400}
                 }else{
-                    return{status:true, message: `Usuário com id ${id} atualizado com sucesso`}
+                    return{status:true, message: `Usuário com id ${id} atualizado com sucesso`, statusCode: 200}
                 }
             }else{
-                return{status:false, message: "Usuário não encontrado"}
+                return{status:false, message: "Usuário não encontrado",  statusCode: 404}
             }
 
         } catch (error) {
             console.log(error);
-            return{status: false, message: "Erro inesperado ao atualizar usuário"}
+            return{status: false, message: "Erro inesperado ao atualizar usuário", statusCode: 500}
         }
     }
 
@@ -138,16 +138,16 @@ class UserService{
                 console.log(deleteUser);
                 
                 if(deleteUser == 0){
-                    return{status: false, message: "Erro ao deletar usuário"}
+                    return{status: false, message: "Erro ao deletar usuário", statusCode: 400}
                 }else{
-                    return{status: true, message: `Usuário com id ${id} deletado com sucesso`}
+                    return{status: true, message: `Usuário com id ${id} deletado com sucesso`, statusCode: 200}
                 }
             }else{
-                return{status: false, message: `Usuário não encontrado`}
+                return{status: false, message: `Usuário não encontrado`, statusCode: 404}
             }
         } catch (error) {
             console.log(error);
-            return{status: false, message: "Erro inesperado ao deletar usuário"}
+            return{status: false, message: "Erro inesperado ao deletar usuário", statusCode: 500}
         }
     }
 
@@ -159,17 +159,17 @@ class UserService{
                 const deleteUser =  await User.destroy({where:{email: email}});
                 
                 if(deleteUser == 0){
-                    return{status: false, message: "Erro ao deletar usuário"}
+                    return{status: false, message: "Erro ao deletar usuário", statusCode: 400}
                 }
 
-                return{status: true, message: `Usuário com email ${email} deletado com sucesso`}
+                return{status: true, message: `Usuário com email ${email} deletado com sucesso`, statusCode: 200}
                 
             }else{
-                return{status: false, message: `Usuário não encontrado`}
+                return{status: false, message: `Usuário não encontrado`, statusCode: 404}
             }
         } catch (error) {
             console.log(error);
-            return{status: false, message: "Erro inesperado ao deletar usuário"}
+            return{status: false, message: "Erro inesperado ao deletar usuário", statusCode: 500}
         }
     }
 }

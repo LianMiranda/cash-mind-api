@@ -33,7 +33,7 @@ describe("User tests", () => {
 
     })
 
-    it("Deve impedir a criação de um com campo vazio", async () => {
+    it("Deve impedir a criação de um usuário com campo vazio", async () => {
         const res = await request.post("/api/user").send({ 
             email:"", 
             firstName:"Teste", 

@@ -8,13 +8,14 @@ class UserController {
             const result = await userService.create(email, password, firstName, lastName, cpf);
 
             if(result.status){
-                return res.status(201).json(result);
+                return res.status(result.statusCode).json({status: result.status,message: result.message, user: result.user});
+            }else{
+                return res.status(result.statusCode).json({status: result.status, message: result.message});
             }
 
         }catch(error){
-            const statusCode = error.statusCode;
-            console.log("ERRO: "+error.message);
-            return res.status(statusCode).json({status: false, error: error.message})
+            console.log("Erro inesperado: "+error);
+            return res.status(500).json({error: "Erro interno no servidor"})
         } 
     }
 
@@ -23,9 +24,9 @@ class UserController {
             const result = await userService.find();
 
             if(result.status){
-                return res.status(200).json({status: result.status, message: result.message, result: result.user});
+                return res.status(result.statusCode).json({status: result.status, message: result.message, result: result.user});
             }else{
-                return res.json(400).json({status: result.status, message: result.message})
+                return res.json(result.statusCode).json({status: result.status, message: result.message})
             }
         } catch (error) {
             console.log("Erro inesperado: "+error);
@@ -39,9 +40,9 @@ class UserController {
             const result = await userService.findById(id);
 
            if(result.status){
-                return res.status(200).json({status: result.status, message: result.message, result: result.user});
+                return res.status(result.statusCode).json({status: result.status, message: result.message, result: result.user});
             }else{
-                return res.status(400).json({status: result.status, message: result.message})
+                return res.status(result.statusCode).json({status: result.status, message: result.message})
             }
 
         } catch (error) {
@@ -56,9 +57,9 @@ class UserController {
             const result = await userService.findByEmail(email);
 
            if(result.status){
-                return res.status(200).json({status: result.status, message: result.message, result: result.user});
+                return res.status(result.statusCode).json({status: result.status, message: result.message, result: result.user});
             }else{
-                return res.status(400).json({status: result.status, message: result.message})
+                return res.status(result.statusCode).json({status: result.status, message: result.message})
             }
 
         } catch (error) {
@@ -75,9 +76,9 @@ class UserController {
             const result = await userService.update(id, email, newPassword, actualPassword, firstName, lastName, cpf);
             
             if(result.status){
-                return res.status(200).json({status: result.status, message: result.message, result: result.user});
+                return res.status(result.statusCode).json({status: result.status, message: result.message, result: result.user});
             }else{
-                return res.status(400).json({status: result.status, message: result.message})
+                return res.status(result.statusCode).json({status: result.status, message: result.message})
             }
         } catch (error) {
             console.log("Erro inesperado: "+error);
@@ -91,9 +92,9 @@ class UserController {
             const result = await userService.delete(id);
 
             if(result.status){
-                return res.status(200).json({status: result.status, message: result.message});
+                return res.status(result.statusCode).json({status: result.status, message: result.message});
             }else{
-                return res.status(400).json({status: result.status, message: result.message})
+                return res.status(result.statusCode).json({status: result.status, message: result.message})
             }
         } catch (error) {
             console.log("Erro inesperado: "+error);
