@@ -13,7 +13,7 @@ class UserService{
         const verifyEmail = await this.findByEmail(email);
         
         if(verifyEmail.status){
-            return{status:false, message: "Já existe um usuario com esse endereço de email",  statusCode: 409}
+            return{status:false, message: "Já existe um usuário cadastrado com esse endereço de email",  statusCode: 409}
         }
 
         try {
@@ -87,7 +87,7 @@ class UserService{
                     const emailExists = await this.findByEmail(email);
 
                     if(emailExists.status){
-                        return{status:false, message: "Já existe um usuario com esse endereço de email",  statusCode: 409}
+                        return{status:false, message: "Já existe um usuário cadastrado com esse endereço de email",  statusCode: 409}
                     }
 
                     updateUser.email = email;
@@ -135,7 +135,6 @@ class UserService{
 
             if(userExists.status){
                 const deleteUser =  await User.destroy({where:{id: id}});
-                console.log(deleteUser);
                 
                 if(deleteUser == 0){
                     return{status: false, message: "Erro ao deletar usuário", statusCode: 400}

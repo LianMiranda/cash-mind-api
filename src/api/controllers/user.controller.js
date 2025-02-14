@@ -5,7 +5,7 @@ class UserController {
     async create(req,res){
         try{
             let {email, password, firstName, lastName, cpf} = req.body;
-            const result = await userService.create(email, password, firstName, lastName, cpf);
+            const result = await userService.create(email.trim(), password, firstName.trim(), lastName.trim(), cpf.trim());
 
             if(result.status){
                 return res.status(result.statusCode).json({status: result.status,message: result.message, user: result.user});

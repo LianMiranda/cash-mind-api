@@ -5,12 +5,12 @@ class AuthController{
        try {
             let {email, password} = req.body;
 
-            const result = await authService.login(email, password);
+            const result = await authService.login(email.trim(), password);
 
             if(result.status){
-                res.status(200).json({status: result.status, token: result.token})
+                res.status(result.statusCode).json({status: result.status, token: result.token})
             }else{
-                res.status(400).json({status: result.status, message: result.message})
+                res.status(result.statusCode).json({status: result.status, message: result.message})
             }
        } catch (error) {
             console.log("Erro inesperado "+error);
