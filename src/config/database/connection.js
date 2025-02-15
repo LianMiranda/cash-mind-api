@@ -1,6 +1,5 @@
 const { Sequelize } = require("sequelize");
 const env = require('../EnvConfig/env.config');
-require("dotenv").config();
 
 
 const sequelize = new Sequelize(env.database.name, env.database.user, env.database.password, {
