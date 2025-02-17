@@ -17,6 +17,10 @@ class AuthController{
             res.status(500).json({message: "Erro interno no servidor"})
        }
     }
+
+    async loginWithOauth(req, res){
+
+    }
 }
 
 module.exports = new AuthController()

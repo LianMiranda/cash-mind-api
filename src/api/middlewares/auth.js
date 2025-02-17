@@ -1,3 +1,7 @@
-async function verifyUser(params) {
-    
+async function verifToken(req, res, next) {
+    try {
+        
+    } catch (error) {
+        
+    }
 }

@@ -3,7 +3,6 @@ const userService = require("./user.service");
 const genToken = require('../utils/genToken');
 const {compare}  = require("../utils/encryption");
 
-
 class AuthService{
     async login(email, password){
         try {

@@ -13,5 +13,9 @@ module.exports = {
   },
   encrypt:{
     salt: process.env.SALT_ROUNDS
+  },
+  oauth:{
+    clientSecretGoogle: process.env.CLIENT_SECRET_GOOGLE,
+    clientIdGoogle: process.env.CLIENT_ID_GOOGLE
   }
 };
