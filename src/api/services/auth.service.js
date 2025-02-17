@@ -31,6 +31,8 @@ class AuthService{
     }
 
     //TODO REGISTER
+
+    //TODO OAUTH
 }
 
 module.exports = new AuthService()

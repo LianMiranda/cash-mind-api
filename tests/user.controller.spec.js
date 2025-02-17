@@ -61,15 +61,15 @@ afterEach(async () => {
 describe("User tests", () => {
     it("Deve registrar um usuario com sucesso", async () =>{
         const res = await request.post("/api/user").send(userTest);
-        expect(res.statusCode).toEqual(201);
+        expect(res.statusCode).toBe(201);
         expect(res._body.user).toHaveProperty("id");
     });
     
     it("Deve impedir a criação de um usuario que já exista", async () => {
         const res = await request.post("/api/user").send(userTest);
         
-        expect(res.statusCode).toEqual(409);
-        expect(res._body.message).toEqual("Já existe um usuário cadastrado com esse endereço de email")
+        expect(res.statusCode).toBe(409);
+        expect(res._body.message).toBe("Já existe um usuário cadastrado com esse endereço de email")
 
     })
 
@@ -81,8 +81,8 @@ describe("User tests", () => {
             cpf:"00000000000",
             password: "1234"
         })
-        expect(res.statusCode).toEqual(400);
-        expect(res._body.message).toEqual("Verifique se todos os campos foram preenchidos")
+        expect(res.statusCode).toBe(400);
+        expect(res._body.message).toBe("Verifique se todos os campos foram preenchidos")
     });
 
     
@@ -91,7 +91,7 @@ describe("User tests", () => {
         
         const res = await request.delete(`/api/user/delete/${getUser._body.result.id}`);
 
-        expect(res.statusCode).toEqual(200)
+        expect(res.statusCode).toBe(200)
     })
 })
 
@@ -100,27 +100,27 @@ describe("AUTH", () =>{
         const res = await request.post("/api/auth/login").send({email: userTestAuth.email, password: userTestAuth.password});
         
         expect(res._body).toHaveProperty("token")
-        expect(res.statusCode).toEqual(200);
+        expect(res.statusCode).toBe(200);
     });
 
     it("Deve impedir que o usuario faça login com algum campo vazio", async () =>{
         const res = await request.post("/api/auth/login").send({email: "", password: userTestAuth.password});
         
-        expect(res._body.message).toEqual("Verifique se os campos foram digitados corretamente.")
-        expect(res.statusCode).toEqual(422);
+        expect(res._body.message).toBe("Verifique se os campos foram digitados corretamente.")
+        expect(res.statusCode).toBe(422);
     })
 
     it("Deve impedir que o usuario faça login com senha incorreta", async () =>{
         const res = await request.post("/api/auth/login").send({email: userTestAuth.email, password: "000004320"})
         
-        expect(res._body.message).toEqual("Credênciais inválidas, verifique se os campos foram preenchidos corretamente")
-        expect(res.statusCode).toEqual(400);
+        expect(res._body.message).toBe("Credênciais inválidas, verifique se os campos foram preenchidos corretamente")
+        expect(res.statusCode).toBe(400);
     })
 
     it("Deve impedir que o usuario faça login com email incorreto (inexistente)", async () =>{
         const res = await request.post("/api/auth/login").send({email:`${Date.now()}@gmail.com`, password: userTestAuth.password})
         
-        expect(res._body.message).toEqual("Credênciais inválidas, verifique se os campos foram preenchidos corretamente")
-        expect(res.statusCode).toEqual(400);
+        expect(res._body.message).toBe("Credênciais inválidas, verifique se os campos foram preenchidos corretamente")
+        expect(res.statusCode).toBe(400);
     })
 })
