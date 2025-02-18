@@ -27,7 +27,6 @@ module.exports = (passport) => {
               cpf: null,
             });
           }
-          console.log(user);
 
           return done(null, user);
         } catch (error) {
