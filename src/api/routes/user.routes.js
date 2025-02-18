@@ -4,7 +4,7 @@ const authController = require("../controllers/auth.controller");
 const router = express.Router();
 const passport = require('passport');
 const passportConfig = require("../../config/passport/passport-config");
-const verifToken = require("../middlewares/auth");
+const verifyToken = require("../middlewares/auth");
 passportConfig(passport);
 
 router.get('/', (req, res) => {
@@ -17,7 +17,7 @@ router.get('/error', (req, res) => {
 
 
 router.post("/user", userController.create);
-router.get("/users", verifToken, userController.findAll);
+router.get("/users", verifyToken, userController.findAll);
 router.get("/user/:id", userController.findById);
 router.get("/user/email/:email", userController.findByEmail);
 router.put("/user/update/:id", userController.update);

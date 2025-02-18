@@ -11,7 +11,7 @@ module.exports = (passport) => {
         clientSecret: env.oauth.clientSecretGoogle,
         callbackURL: "http://localhost:3000/auth/google/callback",
       },
-      async (accessToken, refrashToken, profile, done) => {
+      async (accessToken, refreshToken, profile, done) => {
         try {
           const email = profile.emails[0].value;
 
