@@ -30,7 +30,6 @@ class UserService{
         }       
     }
 
-    //TODO Mudar a forma como o erro é tratado nas outras funções
     async find(){
         try {
             const user = await User.findAll();

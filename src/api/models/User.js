@@ -6,12 +6,13 @@ const User = sequelize.define(
   {
     id: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
       primaryKey: true,
+      unique: true
     },
     email: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
       unique: true,
     },
     password: {
@@ -20,7 +21,7 @@ const User = sequelize.define(
     },
     firstName: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
     },
     lastName: {
       type: DataTypes.STRING,
@@ -30,6 +31,11 @@ const User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    googleId: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      unique: true
+    }
   },
  { freezeTableName: true}
 );

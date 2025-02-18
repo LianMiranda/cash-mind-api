@@ -1,9 +1,9 @@
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const env = require("../env/env");
-const User = require("../../api/models/User");
+const authService = require("../../api/services/auth.service");
 
-module.exports = (passport) => {
+const passportConfig = (passport) => {
   passport.use(
     new GoogleStrategy(
       {
@@ -13,20 +13,18 @@ module.exports = (passport) => {
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
+          // console.log({accessToken, refreshToken, profile, done});
           const email = profile.emails[0].value;
+          const googleId = profile.id
 
-          let user = await User.findOne({ where: { email: email } });
-
-          if (!user) {
-            user = await User.create({
-              id: profile.id,
+          const user = await authService.userOAuth({
               email: email,
               password: null,
               firstName: profile.name.givenName,
               lastName: profile.name.familyName,
               cpf: null,
-            });
-          }
+              googleId: googleId,
+          });
 
           return done(null, user);
         } catch (error) {
@@ -44,3 +42,5 @@ module.exports = (passport) => {
     done(null, user);
   });
 };
+
+module.exports = passportConfig;

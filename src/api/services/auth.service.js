@@ -1,7 +1,8 @@
-const jwt = require("jsonwebtoken");
 const userService = require("./user.service");
 const genToken = require('../utils/genToken');
 const {compare}  = require("../utils/encryption");
+const User = require("../models/User");
+const { v4 } = require("uuid");
 
 class AuthService{
     async login(email, password){
@@ -31,7 +32,27 @@ class AuthService{
 
     //TODO REGISTER
 
-    //TODO OAUTH
+    async userOAuth({id, email, password, firstName, lastName, cpf, googleId}){
+        try {
+            let user = await User.findOne({where:{googleId}});
+            const id = v4()
+            if(!user){
+                user = await User.create({
+                        id: id, 
+                        email: email,
+                        password: password, 
+                        firstName: firstName, 
+                        lastName: lastName, 
+                        cpf: cpf, 
+                        googleId: googleId
+                    })  
+                }
+            return user;
+        } catch (error) {
+            console.log(error); 
+        }
+
+    }
 }
 
 module.exports = new AuthService()

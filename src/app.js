@@ -1,14 +1,14 @@
 const express = require('express');
+const session = require('express-session');
+const passport = require('passport');
 const connection = require("./config/database/connection");
-const userRoutes = require("./api/routes/user.routes");
 const User = require("./api/models/User");
 const Transaction = require("./api/models/Transaction");
 const app = express();
-const passport = require('passport');
 const env = require('./config/env/env');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const session = require('express-session');
-
+//routes
+const userRoutes = require("./api/routes/user.routes");
+const authRoutes = require("./api/routes/auth.routes")
 
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
@@ -22,6 +22,19 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use("/", userRoutes);
+app.use("/", userRoutes, authRoutes);
+
+app.get('/', (req, res) => {
+    res.send("🚀 Api rodando, Olá"+req.user);
+});
+
+app.get('/error', (req, res) => {
+    res.send(`<div><h1 style="color: red">Erro ao fazer login com google!</h1></div>`)
+});
+
+app.get('/logout', (req, res) => {
+    req.logout(()=> {});
+    res.redirect('/');
+});
 
 module.exports = app

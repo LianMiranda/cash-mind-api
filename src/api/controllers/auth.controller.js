@@ -1,4 +1,5 @@
 const authService = require("../services/auth.service");
+const genToken = require("../utils/genToken");
 
 class AuthController{
     async login(req, res){
@@ -18,8 +19,11 @@ class AuthController{
        }
     }
 
-    async loginWithOauth(req, res){
-
+    async oAuth(req, res){
+        const user = req.user;        
+        const token = await genToken(user, "2h");
+    
+        res.status(200).json({token})
     }
 }
 

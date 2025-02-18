@@ -16,6 +16,6 @@ module.exports = {
   },
   oauth:{
     clientSecretGoogle: process.env.CLIENT_SECRET_GOOGLE,
-    clientIdGoogle: process.env.CLIENT_ID_GOOGLE
+    clientIdGoogle: process.env.CLIENT_ID_GOOGLE,
   }
 };
