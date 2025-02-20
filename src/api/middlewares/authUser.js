@@ -1,7 +1,5 @@
 const jwt = require("jsonwebtoken");
 const env = require("../../config/env/env");
-const passport = require("passport");
-
 
 async function verifToken(req, res, next) {
     try {
