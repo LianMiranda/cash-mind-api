@@ -26,7 +26,7 @@ class UserController {
             if(result.status){
                 return res.status(result.statusCode).json({status: result.status, message: result.message, result: result.user});
             }else{
-                return res.json(result.statusCode).json({status: result.status, message: result.message})
+                return res.status(result.statusCode).json({status: result.status, message: result.message})
             }
         } catch (error) {
             console.log("Erro inesperado: "+error);

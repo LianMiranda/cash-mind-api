@@ -47,7 +47,7 @@ class transactionService{
                 return{status: false, message: "Nenhuma transação encontrada", statusCode: 404};
             }
 
-            return{status: true, message: "Transações encontradas", statusCode: 200, transactions}; 
+            return{status: true, message: "Transações encontradas", statusCode: 200, transactions: transactions}; 
 
         } catch (error) {
             console.log(error);
@@ -77,7 +77,7 @@ class transactionService{
         const userExists = await this.findById(id);
 
         if(!userExists.status){
-            return{status: false, message: `Usuário não encontrado`, statusCode: 404};
+            return{status: false, message: `Transação não encontrada`, statusCode: 404};
         }
 
         let updateTransaction = {};
@@ -88,15 +88,15 @@ class transactionService{
         if(category){
             if(updateTransaction.type == "DESPESA"){
                 categories = expenseCategories;
+            }else{
+                 categories = revenueCategories;
             }
-                
-            categories = revenueCategories;
 
             if(categories.indexOf(category) != -1){ 
                 updateTransaction.category = category;  
+            }else{
+                 return{status: false, message: `As categorias para o tipo ${type} são: ${categories}`, statusCode: 400};
             }
-
-            return{status: false, message: `As categorias para o tipo ${type} são: ${categories}`, statusCode: 400};
         }
 
         if(date) updateTransaction.date = date;
@@ -125,6 +125,8 @@ class transactionService{
                 await Transaction.destroy({where: {id}}); 
                 return{status: true, message: `Transação com id ${id} excluida com sucesso!`, statusCode: 200}
             }
+
+            return{status: false, message: `Transação não encontrada`, statusCode: 404};
         } catch (error) {
             console.log(error);
             return{status: false, message: "Erro inesperado ao buscar transação", statusCode: 500};

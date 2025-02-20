@@ -5,6 +5,7 @@ const router = express.Router()
 router.post("/transaction", transactionController.create)
 router.get("/transactions", transactionController.find)
 router.get("/transaction/:id", transactionController.findById)
-router.post("/transaction/:id", transactionController.update)
+router.put("/transaction/:id", transactionController.update)
+router.delete("/transaction/:id", transactionController.delete)
 
 module.exports = router;

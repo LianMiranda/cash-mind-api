@@ -4,12 +4,25 @@ const { AppError } = require("../utils/customErrors");
 const {encrypt} = require("../utils/encryption");
 const bcrypt = require('bcrypt');
 const {v4} = require('uuid');
+const emailValidate = require("../utils/emailValidate");
+const testaCPF = require("../utils/cpfValidate");
 
 class UserService{
     async create(email, password, firstName, lastName, cpf){
 
         if(!email || !password || !firstName || !lastName || !cpf){
             return{status:false, message: "Verifique se todos os campos foram preenchidos", statusCode: 400}
+        }
+        
+        const validateEmail = emailValidate(email);
+        const validateCPF = testaCPF(cpf);
+        
+        if(!validateEmail){
+            return{status:false, message: "Formato de email inválido",  statusCode: 400}
+        }
+
+        if(!validateCPF){
+            return{status:false, message: "CPF inválido",  statusCode: 400}
         }
         
         const verifyEmail = await this.findByEmail(email);
