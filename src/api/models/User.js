@@ -2,7 +2,7 @@ const { DataTypes, UUIDV4 } = require("sequelize");
 const sequelize = require("../../config/database/connection");
 
 const User = sequelize.define(
-  "User",
+  "users",
   {
     id: {
       type: DataTypes.STRING,

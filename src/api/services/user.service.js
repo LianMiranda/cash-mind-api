@@ -1,3 +1,4 @@
+const Transaction = require("../models/Transaction");
 const User = require("../models/User");
 const { AppError } = require("../utils/customErrors");
 const {encrypt} = require("../utils/encryption");
@@ -47,7 +48,12 @@ class UserService{
     
     async findById(id){
         try {
-            const user = await User.findOne({where: {id: id}});
+            const user = await User.findOne({
+                where: {id: id},
+                include: [{
+                    model: Transaction, as: 'transactions'
+                }]
+            });
             
             if(user){
                 return{status: true, user, statusCode: 200}
@@ -141,28 +147,6 @@ class UserService{
                 }else{
                     return{status: true, message: `Usuário com id ${id} deletado com sucesso`, statusCode: 200}
                 }
-            }else{
-                return{status: false, message: `Usuário não encontrado`, statusCode: 404}
-            }
-        } catch (error) {
-            console.log(error);
-            return{status: false, message: "Erro inesperado ao deletar usuário", statusCode: 500}
-        }
-    }
-
-    async deleteByEmail(email){
-        try {
-            const userExists = await this.findByEmail(email);
-
-            if(userExists.status){
-                const deleteUser =  await User.destroy({where:{email: email}});
-                
-                if(deleteUser == 0){
-                    return{status: false, message: "Erro ao deletar usuário", statusCode: 400}
-                }
-
-                return{status: true, message: `Usuário com email ${email} deletado com sucesso`, statusCode: 200}
-                
             }else{
                 return{status: false, message: `Usuário não encontrado`, statusCode: 404}
             }

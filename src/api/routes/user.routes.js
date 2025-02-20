@@ -4,7 +4,7 @@ const router = express.Router();
 const verifyToken = require("../middlewares/auth");
 
 router.post("/user", userController.create);
-router.get("/users", verifyToken, userController.findAll);
+router.get("/users", userController.findAll);
 router.get("/user/:id", userController.findById);
 router.get("/user/email/:email", userController.findByEmail);
 router.put("/user/update/:id", userController.update);
