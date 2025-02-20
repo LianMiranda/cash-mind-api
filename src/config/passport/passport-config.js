@@ -13,7 +13,6 @@ const passportConfig = (passport) => {
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
-          // console.log({accessToken, refreshToken, profile, done});
           const email = profile.emails[0].value;
           const googleId = profile.id
 

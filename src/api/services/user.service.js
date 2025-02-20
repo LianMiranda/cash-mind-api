@@ -1,46 +1,19 @@
 const Transaction = require("../models/Transaction");
 const User = require("../models/User");
 const { AppError } = require("../utils/customErrors");
-const {encrypt} = require("../utils/encryption");
 const bcrypt = require('bcrypt');
 const {v4} = require('uuid');
-const emailValidate = require("../utils/emailValidate");
-const testaCPF = require("../utils/cpfValidate");
+
 
 class UserService{
-    async create(email, password, firstName, lastName, cpf){
-
-        if(!email || !password || !firstName || !lastName || !cpf){
-            return{status:false, message: "Verifique se todos os campos foram preenchidos", statusCode: 400}
-        }
-        
-        const validateEmail = emailValidate(email);
-        const validateCPF = testaCPF(cpf);
-        
-        if(!validateEmail){
-            return{status:false, message: "Formato de email inválido",  statusCode: 400}
-        }
-
-        if(!validateCPF){
-            return{status:false, message: "CPF inválido",  statusCode: 400}
-        }
-        
-        const verifyEmail = await this.findByEmail(email);
-        
-        if(verifyEmail.status){
-            return{status:false, message: "Já existe um usuário cadastrado com esse endereço de email",  statusCode: 409}
-        }
-
+    async create({email, password, firstName, lastName, cpf}){
         try {
-            const hash = await encrypt(password);
             const id = v4()
-            const user = await User.create({id, email, password: hash, firstName, lastName, cpf});
-
-            return{status: true, message: "Usuário cadastrado com sucesso", user, statusCode: 201}
-
+            const user = await User.create({id, email, password, firstName, lastName, cpf});
+            return{status: true, statusCode: 201, user}
         } catch (error) {
             console.log(error);
-            throw new AppError("Erro inesperado ao cadastrar usuário", 500);
+            return{status: false, message: "Erro inesperado ao criar usuarios", statusCode: 500}
         }       
     }
 

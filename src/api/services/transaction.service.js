@@ -17,10 +17,6 @@ class transactionService{
                 
             categories = revenueCategories
             
-
-            console.log(type);
-            console.log(categories.indexOf(category));
-            
             if(categories.indexOf(category) != -1){
                 const id = v4();
                 const transaction = await Transaction.create({id, type, category, date, price, userId});

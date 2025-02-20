@@ -1,4 +1,4 @@
-function testaCPF(cpf) {
+function cpfValidate(cpf) {
     cpf = cpf.replace(/\D/g, "");
 
     if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false; // Verifica se tem 11 dígitos e se todos são iguais
@@ -25,4 +25,4 @@ function testaCPF(cpf) {
     return true;
 }
 
-module.exports = testaCPF;
+module.exports = cpfValidate;
