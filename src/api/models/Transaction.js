@@ -30,8 +30,6 @@ const Transaction = sequelize.define(
     userId: {
       type: DataTypes.STRING,
       allowNull: false,
-      primaryKey: true,
-      unique: true,
       onDelete: "CASCADE",
       references:{
         model: "users",

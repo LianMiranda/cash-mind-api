@@ -9,16 +9,18 @@ class transactionService{
         }
 
         let categories = [];
-
-        try {
-            if(type == "DESPESA"){
-                categories = expenseCategories;
-            }
-                
+        
+        if(type == "DESPESA"){
+            categories = expenseCategories;
+        }else if(type == "RECEITA"){
             categories = revenueCategories
+        }else{
+            return{status: false, message: "Tipo de transação inválido", statusCode: 400};
+        }
             
+        try {          
             if(categories.indexOf(category) != -1){
-                const id = v4();
+                const id = v4();        
                 const transaction = await Transaction.create({id, type, category, date, price, userId});
     
                 if(!transaction){
@@ -127,6 +129,21 @@ class transactionService{
             console.log(error);
             return{status: false, message: "Erro inesperado ao buscar transação", statusCode: 500};
         }
+    }
+
+    async findByDate(userId, date){
+        const transactions = await Transaction.findAll({
+            where:{
+                date: date,
+                userId: userId,
+            }
+        });
+        
+        if(transactions.length === 0){
+            return{status: false, message: "Nenhuma transação encontrada", statusCode: 404};
+        }
+
+        return{status: true, message: "Transações encontradas", statusCode: 200, transactions: transactions}; 
     }
 }
 

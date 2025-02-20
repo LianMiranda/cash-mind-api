@@ -84,6 +84,27 @@ class transactionController{
             return res.status(500).json({error: "Erro interno no servidor"})
         }
     }
+
+    async findByDate(req, res){
+        try {
+            const userId = req.params.userId;
+            const date = req.body.date
+
+            const result = await transactionService.findByDate(userId, date);
+
+            console.log(result);
+            
+
+            if(result.status){
+                res.status(result.statusCode).json({status: result.status, message: result.message, transactions: result.transactions})
+            }else{
+                res.status(result.statusCode).json({status: result.status, message: result.message});  
+            }
+        }catch(error){
+            console.log("Erro inesperado: "+error);
+            return res.status(500).json({error: "Erro interno no servidor"})
+        }
+    }
 }
 
 module.exports = new transactionController()
