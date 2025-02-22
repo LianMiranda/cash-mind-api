@@ -145,6 +145,36 @@ class transactionService{
 
         return{status: true, message: "Transações encontradas", statusCode: 200, transactions: transactions}; 
     }
+
+    async findByCategory(userId, category){
+        const transactions = await Transaction.findAll({
+            where:{
+                category: category,
+                userId: userId,
+            }
+        });
+        
+        if(transactions.length === 0){
+            return{status: false, message: "Nenhuma transação encontrada", statusCode: 404};
+        }
+
+        return{status: true, message: "Transações encontradas", statusCode: 200, transactions: transactions}; 
+    }
+    
+    async findByType(userId, type){
+        const transactions = await Transaction.findAll({
+            where:{
+                type: type,
+                userId: userId,
+            }
+        });
+        
+        if(transactions.length === 0){
+            return{status: false, message: "Nenhuma transação encontrada", statusCode: 404};
+        }
+
+        return{status: true, message: "Transações encontradas", statusCode: 200, transactions: transactions}; 
+    }
 }
 
 module.exports = new transactionService()

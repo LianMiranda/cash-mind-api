@@ -105,6 +105,49 @@ class transactionController{
             return res.status(500).json({error: "Erro interno no servidor"})
         }
     }
+
+    async findByCategory(req, res){
+        try {
+            const userId = req.params.userId;
+            const category = req.body.category
+
+            const result = await transactionService.findByCategory(userId, category);
+
+            console.log(result);
+            
+
+            if(result.status){
+                res.status(result.statusCode).json({status: result.status, message: result.message, transactions: result.transactions})
+            }else{
+                res.status(result.statusCode).json({status: result.status, message: result.message});  
+            }
+        }catch(error){
+            console.log("Erro inesperado: "+error);
+            return res.status(500).json({error: "Erro interno no servidor"})
+        }
+    }
+
+    async findByType(req, res){
+        try {
+            const userId = req.params.userId;
+            const type = req.body.type
+
+            const result = await transactionService.findByType(userId, type);
+
+            console.log(result);
+            
+
+            if(result.status){
+                res.status(result.statusCode).json({status: result.status, message: result.message, transactions: result.transactions})
+            }else{
+                res.status(result.statusCode).json({status: result.status, message: result.message});  
+            }
+        }catch(error){
+            console.log("Erro inesperado: "+error);
+            return res.status(500).json({error: "Erro interno no servidor"})
+        }
+    }
+     
 }
 
 module.exports = new transactionController()
