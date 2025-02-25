@@ -8,7 +8,7 @@ const {v4} = require('uuid');
 class UserService{
     async create({email, password, firstName, lastName, cpf}){
         try {
-            const id = v4()
+            const id = v4();
             const user = await User.create({id, email, password, firstName, lastName, cpf});
             return{status: true, statusCode: 201, user}
         } catch (error) {

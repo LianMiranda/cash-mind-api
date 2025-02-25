@@ -1,4 +1,6 @@
-const transactionService = require("../services/transaction.service")
+const transactionService = require("../services/transaction.service");
+const generateReportPerMonth = require("../utils/genReport");
+const generateReportPerMounth = require("../utils/genReport");
 
 class transactionController{
     async create(req, res){
@@ -142,6 +144,49 @@ class transactionController{
             }else{
                 res.status(result.statusCode).json({status: result.status, message: result.message});  
             }
+        }catch(error){
+            console.log("Erro inesperado: "+error);
+            return res.status(500).json({error: "Erro interno no servidor"})
+        }
+    }
+
+    async findByMonth(req, res){
+        try {
+            const userId = req.params.userId;
+            const {month, year} = req.body;
+
+            const result = await transactionService.findByMonth(userId, month, year);
+
+            console.log(result);
+            
+            if(result.status){
+                res.status(result.statusCode).json({status: result.status, message: result.message, transactions: result.transactions});
+            }else{
+                res.status(result.statusCode).json({status: result.status, message: result.message});  
+            }
+        }catch(error){
+            console.log("Erro inesperado: "+error);
+            return res.status(500).json({error: "Erro interno no servidor"})
+        }
+    }
+
+    async report(req, res){
+        try {
+            const {userId, month, year} = req.params;
+            
+            if (!userId || isNaN(month) || isNaN(year)) {
+                return res.status(400).json({ message: "Parâmetros inválidos" });
+            }
+            
+            const result = await transactionService.findByMonth(userId, month, year);
+
+            if (!result || !result.transactions || result.transactions.length === 0) {
+                return res.status(404).json({ message: "Nenhuma transação encontrada" });
+            }
+
+            const transactions = result.transactions;
+
+            generateReportPerMonth(res, transactions);
         }catch(error){
             console.log("Erro inesperado: "+error);
             return res.status(500).json({error: "Erro interno no servidor"})

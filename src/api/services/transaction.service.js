@@ -1,6 +1,7 @@
 const { v4 } = require("uuid");
 const Transaction = require("../models/Transaction");
 const { expenseCategories, revenueCategories } = require("../../config/transactionConfig/categories");
+const { Sequelize, fn, Op, col } = require("sequelize");
 
 class transactionService{
     async create(type, category, date, price, userId){
@@ -57,6 +58,23 @@ class transactionService{
     async findById(id){
         try {
             const transaction = await Transaction.findOne({where: {id}});
+
+            if(!transaction){
+                return{status: false, message: "Nenhuma transação encontrada", statusCode: 404};
+            }
+
+            return{status: true, message: `Transação com ${id} encontrada`, statusCode: 200, transaction}; 
+            
+        } catch (error) {
+            console.log(error);
+            return{status: false, message: "Erro inesperado ao buscar transação", statusCode: 500};
+
+        }
+    }
+
+    async findByUserId(id){
+        try {
+            const transaction = await Transaction.findAll({where: {userId: id}});
 
             if(!transaction){
                 return{status: false, message: "Nenhuma transação encontrada", statusCode: 404};
@@ -166,6 +184,24 @@ class transactionService{
             where:{
                 type: type,
                 userId: userId,
+            }
+        });
+        
+        if(transactions.length === 0){
+            return{status: false, message: "Nenhuma transação encontrada", statusCode: 404};
+        }
+
+        return{status: true, message: "Transações encontradas", statusCode: 200, transactions: transactions}; 
+    }
+
+    async findByMonth(userId, mouth, year){
+        const transactions = await Transaction.findAll({
+            where:{
+                userId: userId,
+                [Op.and]: [
+                    Sequelize.where(fn("MONTH", col("date")), mouth),
+                    Sequelize.where(fn("YEAR", col("date")), year),
+                ]
             }
         });
         

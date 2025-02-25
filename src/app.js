@@ -27,7 +27,7 @@ app.use(passport.session());
 app.use("/", userRoutes, authRoutes, transactionRoutes);
 
 app.get('/', (req, res) => {
-    res.send("🚀 Api rodando, Olá "+ req.user.firstName + " " + req.user.lastName );
+    res.send("🚀 Api rodando" );
 });
 
 app.get('/error', (req, res) => {
