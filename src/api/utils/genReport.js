@@ -1,43 +1,66 @@
 const PdfPrinter = require("pdfmake");
+const fonts = {
+    Helvetica: {
+    normal: "Helvetica",
+    bold: "Helvetica-Bold",
+    italics: "Helvetica-Oblique",
+    bolditalics: "Helvetica-BoldOblique",
+    },
+};
 
-async function generateReportPerMonth(response, transactions) {
+function generateReportPerMonth(response, transactions) {
   const body = [];
+  let totalRevenue = 0;
+  let totalExpense = 0;
 
   try {
-    const fonts = {
-        Helvetica: {
-        normal: "Helvetica",
-        bold: "Helvetica-Bold",
-        italics: "Helvetica-Oblique",
-        bolditalics: "Helvetica-BoldOblique",
-        },
-    };
 
     for (let transaction of transactions) {
-        const rows = [];
-        const date = new Date(transaction.date )
-        const formatedDate = date.toLocaleDateString('pt-BR', {timeZone: 'UTC'});
+        const formattedDate =  new Date(transaction.date).toLocaleDateString('pt-BR', {timeZone: 'UTC'});
 
-        rows.push(transaction.id);
-        rows.push(transaction.type);
-        rows.push(transaction.category);
-        rows.push(formatedDate);
-        rows.push(`R$ ${parseFloat(transaction.price).toFixed(2).replace(".", ",")}`);
+        const rows = [
+            transaction.id,
+            transaction.type,
+            transaction.category,
+            formattedDate,
+            `R$ ${parseFloat(transaction.price).toFixed(2).replace(".", ",")}`
+        ];
 
         body.push(rows);
+
+        if(transaction.type === "RECEITA"){
+            totalRevenue = totalRevenue + parseFloat(transaction.price);
+        }else{
+            totalExpense = totalExpense + parseFloat(transaction.price);
+        }
     }
 
     const printer = new PdfPrinter(fonts);
-    const header = [
+
+    const headerTransactions = [
         {text: "Id", style: "ColumnsTitle"}, 
         {text: "Tipo", style: "ColumnsTitle"}, 
         {text: "Categoria   ", style: "ColumnsTitle"}, 
         {text: "Data", style: "ColumnsTitle"}, 
         {text: "Preço", style: "ColumnsTitle"}, 
-
     ];
 
-    //TODO Adicionar total de despesas, receitas e total geral (receitas - despesas)
+    const headerTotalPrice = [
+        {text: "TOTAL RECEITAS", style: "ColumnsTitle"}, 
+        {text: "TOTAL DESPESAS", style: "ColumnsTitle"}, 
+        {text: "VALOR TOTAL RESTANTE", style: "ColumnsTitle"}, 
+    ];
+        
+    const total = (totalRevenue - totalExpense);
+
+    
+    const valuesTotalPrice = [
+        { text: `R$ ${totalRevenue.toFixed(2).replace(".", ",")}` },
+        { text: `R$ ${totalExpense.toFixed(2).replace(".", ",")}` },
+        { text: `R$ ${total.toFixed(2).replace(".", ",")}` },
+      ];
+      
+
     const docDefinition = {
         defaultStyle: {
         font: "Helvetica",
@@ -46,14 +69,28 @@ async function generateReportPerMonth(response, transactions) {
             {
                 text: "Relatorio Mensal de Transações", style: "header"
             },
+
             { 
                 table: {
-                heights: function(row){
-                    return 15;
-                },
-                body: [header, ...body],
+                    heights: function(row){
+                        return 15;
+                    },
+                    body: [
+                        headerTransactions, 
+                        ...body,
+                    ],
+                    style: "tableStyle"
                 },
             },
+            {
+                table: {
+                    body: [
+                        headerTotalPrice, 
+                        valuesTotalPrice,
+                    ],
+                },
+                margin: [0, 10, 0, 0],
+            }
         ],
         styles:{
             header: {
@@ -66,8 +103,7 @@ async function generateReportPerMonth(response, transactions) {
                 fontSize: 11,
                 bold: true,
                 margin: 2
-            }
-            
+            },
         }
     };
 

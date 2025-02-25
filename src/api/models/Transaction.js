@@ -24,7 +24,7 @@ const Transaction = sequelize.define(
       allowNull: false,
     },
     price: {
-      type: DataTypes.STRING,
+      type: DataTypes.FLOAT,
       allowNull: false,
     },
     userId: {

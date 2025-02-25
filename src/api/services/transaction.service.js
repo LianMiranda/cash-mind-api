@@ -202,7 +202,10 @@ class transactionService{
                     Sequelize.where(fn("MONTH", col("date")), mouth),
                     Sequelize.where(fn("YEAR", col("date")), year),
                 ]
-            }
+            },
+            order:[ 
+                ['type', "DESC"],
+            ]
         });
         
         if(transactions.length === 0){
