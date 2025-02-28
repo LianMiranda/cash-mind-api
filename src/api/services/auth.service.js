@@ -61,9 +61,7 @@ class AuthService{
             const user = await userService.create({email: email, password: hash, firstName: firstName, lastName: lastName, cpf: cpf});
             
             if(user.status){
-                const token = await genToken(user.user, "2h");
-                console.log(token);
-                
+                const token = await genToken(user.user, "2h");                
                 return{status: true, message: "Usuário cadastrado com sucesso", statusCode: 201, token: token}
             }
 
