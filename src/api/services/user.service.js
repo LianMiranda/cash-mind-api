@@ -19,7 +19,9 @@ class UserService{
 
     async find(){
         try {
-            const user = await User.findAll();
+            const user = await User.findAll({
+                attributes: ["id", "firstName", "email", "googleId"]
+            });
 
             if(user.length === 0){
                 return{status: false, message: "Nenhum usuario encontrado", statusCode: 404}
@@ -36,8 +38,10 @@ class UserService{
         try {
             const user = await User.findOne({
                 where: {id: id},
+                attributes: ["id", "firstName", "email", "googleId"],
                 include: [{
-                    model: Transaction, as: 'transactions'
+                    model: Transaction, as: 'transactions',
+                    attributes: ["type", "category", "date", "price"]
                 }]
             });
             
@@ -54,7 +58,14 @@ class UserService{
 
     async findByEmail(email){
         try {
-            const user = await User.findOne({where: {email: email}});
+            const user = await User.findOne({
+                where: {email: email},
+                attributes: ["id", "firstName", "email", "googleId", "password"],
+                include: [{
+                    model: Transaction, as: 'transactions',
+                    attributes: ["type", "category", "date", "price"]
+                }]
+            });
 
             if(user){
                 return{status: true, user, statusCode: 200}

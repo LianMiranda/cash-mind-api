@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const env = require("../../config/env/env");
 
-async function verifToken(req, res, next) {
+async function verifyToken(req, res, next) {
     try {
         const authHeader = req.headers.authorization;
 
@@ -19,4 +19,4 @@ async function verifToken(req, res, next) {
     }
 }
 
-module.exports = verifToken;
+module.exports = verifyToken;

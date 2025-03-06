@@ -93,8 +93,6 @@ class transactionController{
             const date = req.body.date
 
             const result = await transactionService.findByDate(userId, date);
-
-            console.log(result);
             
 
             if(result.status){
@@ -114,8 +112,6 @@ class transactionController{
             const category = req.body.category
 
             const result = await transactionService.findByCategory(userId, category);
-
-            console.log(result);
             
 
             if(result.status){
@@ -135,8 +131,6 @@ class transactionController{
             const type = req.body.type
 
             const result = await transactionService.findByType(userId, type);
-
-            console.log(result);
             
 
             if(result.status){
@@ -156,8 +150,6 @@ class transactionController{
             const {month, year} = req.body;
 
             const result = await transactionService.findByMonth(userId, month, year);
-
-            console.log(result);
             
             if(result.status){
                 res.status(result.statusCode).json({status: result.status, message: result.message, transactions: result.transactions});

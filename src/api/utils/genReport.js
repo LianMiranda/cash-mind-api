@@ -19,7 +19,6 @@ function generateReportPerMonth(response, transactions) {
         const formattedDate =  new Date(transaction.date).toLocaleDateString('pt-BR', {timeZone: 'UTC'});
 
         const rows = [
-            transaction.id,
             transaction.type,
             transaction.category,
             formattedDate,
@@ -38,7 +37,6 @@ function generateReportPerMonth(response, transactions) {
     const printer = new PdfPrinter(fonts);
 
     const headerTransactions = [
-        {text: "Id", style: "ColumnsTitle"}, 
         {text: "Tipo", style: "ColumnsTitle"}, 
         {text: "Categoria   ", style: "ColumnsTitle"}, 
         {text: "Data", style: "ColumnsTitle"}, 
@@ -70,20 +68,23 @@ function generateReportPerMonth(response, transactions) {
                 text: "Relatorio Mensal de Transações", style: "header"
             },
 
-            { 
+            {
                 table: {
                     heights: function(row){
                         return 15;
                     },
-                    body: [
-                        headerTransactions, 
-                        ...body,
-                    ],
+                
+                        widths: ['*', '*', '*', '*'],
+                        headerRows: 1,
+                        body: [headerTransactions, ...body],
                     style: "tableStyle"
                 },
             },
             {
                 table: {
+                    
+                    widths: ['*', '*', '*'],
+                    headerRows: 1,
                     body: [
                         headerTotalPrice, 
                         valuesTotalPrice,
@@ -97,7 +98,7 @@ function generateReportPerMonth(response, transactions) {
                 fontSize: 18,
                 bold: true,
                 alignment: "center",
-                margin: 20 
+                margin: 20, 
             },
             ColumnsTitle:{
                 fontSize: 11,

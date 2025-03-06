@@ -23,8 +23,9 @@ class UserController {
         try {
             const result = await userService.find();
 
+            
             if(result.status){
-                return res.status(result.statusCode).json({status: result.status, message: result.message, result: result.user});
+                return res.status(result.statusCode).json({status: result.status, message: result.message, user: result.user});
             }else{
                 return res.status(result.statusCode).json({status: result.status, message: result.message})
             }

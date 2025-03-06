@@ -40,7 +40,9 @@ class transactionService{
 
     async find(){
         try {
-            const transactions = await Transaction.findAll();
+            const transactions = await Transaction.findAll({
+                attributes: ["type", "category", "date", "price"]
+            });
 
             if(transactions.length === 0){
                 return{status: false, message: "Nenhuma transação encontrada", statusCode: 404};
@@ -57,7 +59,9 @@ class transactionService{
     }
     async findById(id){
         try {
-            const transaction = await Transaction.findOne({where: {id}});
+            const transaction = await Transaction.findOne({where: {id},
+                    attributes: ["type", "category", "date", "price"]
+            });
 
             if(!transaction){
                 return{status: false, message: "Nenhuma transação encontrada", statusCode: 404};
@@ -74,7 +78,9 @@ class transactionService{
 
     async findByUserId(id){
         try {
-            const transaction = await Transaction.findAll({where: {userId: id}});
+            const transaction = await Transaction.findAll({where: {userId: id},
+                attributes: ["type", "category", "date", "price"]
+            });
 
             if(!transaction){
                 return{status: false, message: "Nenhuma transação encontrada", statusCode: 404};
@@ -154,7 +160,8 @@ class transactionService{
             where:{
                 date: date,
                 userId: userId,
-            }
+            },
+            attributes: ["type", "category", "date", "price"]
         });
         
         if(transactions.length === 0){
@@ -169,7 +176,8 @@ class transactionService{
             where:{
                 category: category,
                 userId: userId,
-            }
+            },
+            attributes: ["type", "category", "date", "price"]
         });
         
         if(transactions.length === 0){
@@ -184,7 +192,9 @@ class transactionService{
             where:{
                 type: type,
                 userId: userId,
-            }
+            },
+            attributes: ["type", "category", "date", "price"]
+
         });
         
         if(transactions.length === 0){
@@ -203,6 +213,7 @@ class transactionService{
                     Sequelize.where(fn("YEAR", col("date")), year),
                 ]
             },
+            attributes: ["type", "category", "date", "price"],
             order:[ 
                 ['type', "DESC"],
             ]

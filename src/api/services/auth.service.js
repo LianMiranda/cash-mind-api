@@ -75,6 +75,7 @@ class AuthService{
     async userOAuth({email, password, firstName, lastName, cpf, googleId}){
         try {
             let user = await User.findOne({where:{googleId}});
+            
             const id = v4()
             if(!user){
                 user = await User.create({
