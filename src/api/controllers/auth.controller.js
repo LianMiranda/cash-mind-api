@@ -41,7 +41,7 @@ class AuthController{
         const user = req.user;        
         const token = await genToken(user, "2h");
     
-        res.status(200).json({user: req.user, token})
+        res.status(200).json({access_token: token})
     }
 }
 
