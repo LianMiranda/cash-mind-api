@@ -12,7 +12,6 @@ router.get("/transaction/:id", transactionController.findById);
 router.get("/transactions/date/:userId", transactionController.findByDate);
 router.get("/transactions/category/:userId", transactionController.findByCategory);
 router.get("/transactions/type/:userId", transactionController.findByType);
-router.get("/transactions/month/:userId", transactionController.findByMonth);
 router.get("/transactions/report/:userId/:month-:year", transactionController.report);
 
 module.exports = router;
