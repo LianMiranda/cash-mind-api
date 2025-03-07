@@ -1,18 +1,17 @@
-const { DataTypes } = require("sequelize");
+const { DataTypes, UUIDV4 } = require("sequelize");
 const sequelize = require("../../config/database/connection");
 
 const User = sequelize.define(
-  "User",
+  "users",
   {
     id: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
+      type: DataTypes.STRING,
+      allowNull: false,
       primaryKey: true,
-      autoIncrement: true,
     },
     email: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
       unique: true,
     },
     password: {
@@ -21,7 +20,7 @@ const User = sequelize.define(
     },
     firstName: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
     },
     lastName: {
       type: DataTypes.STRING,
@@ -31,6 +30,11 @@ const User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    googleId: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      unique: true
+    }
   },
  { freezeTableName: true}
 );

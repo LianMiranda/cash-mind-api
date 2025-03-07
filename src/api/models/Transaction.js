@@ -2,35 +2,39 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("../../config/database/connection");
 
 const Transaction = sequelize.define(
-  "Transaction",
+  "transactions",
   {
     id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: true,
       primaryKey: true,
-      autoIncrement: true,
+      unique: true
     },
     type: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
       values: ["DESPESA", "RECEITA"]
     },
     category: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
     },
     date: {
       type: DataTypes.DATEONLY,
-      allowNull: true,
+      allowNull: false,
     },
     price: {
-      type: DataTypes.STRING,
-      allowNull: true,
+      type: DataTypes.FLOAT,
+      allowNull: false,
     },
     userId: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      onDelete: "CASCADE"
+      type: DataTypes.STRING,
+      allowNull: false,
+      onDelete: "CASCADE",
+      references:{
+        model: "users",
+        key: "id"
+      }
     },
   },
  { freezeTableName: true}

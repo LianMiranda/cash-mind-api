@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const env = require("../../config/EnvConfig/env.config");
+const env = require("../../config/env/env");
 
 async function genToken(user, expiresIn) {
     try {
