@@ -2,7 +2,7 @@
 
 ## Descrição
 O Cash Mind API é uma aplicação desenvolvida para auxiliar no gerenciamento de transações financeiras. Ela permite aos usuários registrar, editar e excluir transações, bem como visualizar relatórios mensais de gastos. A API também suporta autenticação via credenciais e OAuth com Google. 
-Essa aplicação foi desenvolvida para estudar as funcionalidades do NodeJs e das bibliotecas usadas, caso tenha algum feedback sobre arquitetura, segurança, etc. Entre em contato: [Email](lian.mendes26@gmail.com) ou [Linkedin](www.linkedin.com/in/lian-souza-miranda-mendes).
+Essa aplicação foi desenvolvida para estudar as funcionalidades do NodeJs e das bibliotecas usadas, caso tenha algum feedback sobre arquitetura, segurança, etc. Entre em contato: [Email](mailto:lian.mendes26@gmail.com?subject=Ol%C3%A1,+Gostaria+de+enviar+um+feedback) ou [Linkedin](https://www.linkedin.com/in/lian-souza-miranda-mendes).
 
 ## Tecnologias Utilizadas
 A API foi desenvolvida utilizando as seguintes tecnologias:
